@@ -4,6 +4,8 @@ WORKDIR /dashboard
 COPY dashboard/package*.json ./
 RUN npm ci
 COPY dashboard/ .
+# Ensure public dir exists (Next.js requires it for standalone copy)
+RUN mkdir -p public
 # Empty string so browser fetches use relative paths (routed by Nginx)
 ENV NEXT_PUBLIC_API_URL=""
 RUN npm run build

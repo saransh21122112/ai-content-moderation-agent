@@ -2,10 +2,10 @@
 
 import { useActionState } from 'react'
 import Link from 'next/link'
-import { loginAction } from './actions'
+import { signupAction } from './actions'
 
-export default function LoginPage() {
-  const [state, action, pending] = useActionState(loginAction, null)
+export default function SignupPage() {
+  const [state, action, pending] = useActionState(signupAction, null)
 
   return (
     <div style={{
@@ -49,15 +49,17 @@ export default function LoginPage() {
           padding: '32px 28px',
         }}>
           <h2 style={{ fontSize: 17, fontWeight: 700, color: '#f0f0f2', margin: '0 0 4px', letterSpacing: '-0.3px' }}>
-            Sign in
+            Create account
           </h2>
           <p style={{ fontSize: 13, color: '#52525b', margin: '0 0 28px' }}>
-            Sign in to access your workspace.
+            Join Sentinel to access moderation tools.
           </p>
 
           <form action={action}>
-            <Field label="Email address" name="email" type="email" placeholder="you@company.com" error={undefined} />
-            <Field label="Password" name="password" type="password" placeholder="••••••••" error={state?.error} />
+            <Field label="Email address" name="email" type="email" placeholder="you@company.com" />
+            <Field label="Username" name="username" type="text" placeholder="john_doe" />
+            <Field label="Password" name="password" type="password" placeholder="Min. 8 characters" />
+            <Field label="Confirm password" name="confirm" type="password" placeholder="Repeat password" />
 
             {state?.error && (
               <div style={{
@@ -92,44 +94,37 @@ export default function LoginPage() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 8,
-                transition: 'background 0.15s',
                 marginBottom: 20,
               }}
             >
               {pending ? (
                 <>
                   <SpinIcon />
-                  Signing in…
+                  Creating account…
                 </>
               ) : (
                 <>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                  Sign in
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                  Create account
                 </>
               )}
             </button>
 
             <div style={{ textAlign: 'center' }}>
-              <span style={{ fontSize: 13, color: '#52525b' }}>Don&apos;t have an account? </span>
-              <Link href="/dashboard/signup" style={{ fontSize: 13, color: '#3b82f6', textDecoration: 'none', fontWeight: 500 }}>
-                Create account
+              <span style={{ fontSize: 13, color: '#52525b' }}>Already have an account? </span>
+              <Link href="/dashboard/login" style={{ fontSize: 13, color: '#3b82f6', textDecoration: 'none', fontWeight: 500 }}>
+                Sign in
               </Link>
             </div>
           </form>
-        </div>
-
-        <div style={{ textAlign: 'center', marginTop: 24 }}>
-          <p style={{ fontSize: 11, color: '#27272a', margin: 0 }}>
-            Admin: admin@sentinel.ai / Admin@Sentinel123
-          </p>
         </div>
       </div>
     </div>
   )
 }
 
-function Field({ label, name, type, placeholder, error }: {
-  label: string; name: string; type: string; placeholder: string; error?: string
+function Field({ label, name, type, placeholder }: {
+  label: string; name: string; type: string; placeholder: string
 }) {
   return (
     <div style={{ marginBottom: 16 }}>
@@ -144,7 +139,7 @@ function Field({ label, name, type, placeholder, error }: {
         style={{
           width: '100%',
           background: '#08080b',
-          border: `1px solid ${error ? '#ef4444' : '#1c1c24'}`,
+          border: '1px solid #1c1c24',
           borderRadius: 8,
           padding: '10px 12px',
           fontSize: 14,
@@ -153,7 +148,7 @@ function Field({ label, name, type, placeholder, error }: {
           boxSizing: 'border-box',
         }}
         onFocus={e => { e.target.style.borderColor = '#3b82f6' }}
-        onBlur={e => { e.target.style.borderColor = error ? '#ef4444' : '#1c1c24' }}
+        onBlur={e => { e.target.style.borderColor = '#1c1c24' }}
       />
     </div>
   )

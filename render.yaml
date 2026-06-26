@@ -36,10 +36,14 @@ services:
         sync: false
       - key: PINECONE_INDEX
         value: moderation-decisions
-      - key: DASHBOARD_PASSWORD
-        sync: false
-      - key: DASHBOARD_SECRET
+      - key: JWT_SECRET
         generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin@sentinel.ai
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_USERNAME
+        value: admin
 
 databases:
   - name: sentinel-db

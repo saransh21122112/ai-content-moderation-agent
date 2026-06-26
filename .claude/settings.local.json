@@ -5,7 +5,9 @@
       "Bash(pip3 install *)",
       "Bash(python3 -m pytest tests/ -v)",
       "Bash(python3 -m pytest \"/Users/saransh/vs code/ai_content_moderation_agent/tests/\" -q)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(git commit -m 'Docker deploy: single container with Nginx, FastAPI, Next.js + login gate *)",
+      "Bash(git push *)"
     ]
   }
 }

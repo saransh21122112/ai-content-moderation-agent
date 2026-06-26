@@ -2,6 +2,7 @@
 set -e
 
 export PORT="${PORT:-10000}"
+export JWT_SECRET="${JWT_SECRET:-sentinel-jwt-dev-secret-change-in-prod}"
 
 # Substitute PORT into our nginx server block and drop it into conf.d
 envsubst '$PORT' < /etc/nginx/conf.d/sentinel.conf.template > /etc/nginx/conf.d/sentinel.conf

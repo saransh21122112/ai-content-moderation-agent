@@ -1,9 +1,14 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from app.api.routes import analytics, appeals, health, history, jobs, moderation, review, upload
 from app.db.connection import engine
 from app.models.database import Base
+
+STATIC_DIR = Path(__file__).parent.parent / "static"
 
 
 @asynccontextmanager
@@ -15,9 +20,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="AI Content Moderation Agent",
+    title="Sentinel — AI Content Moderation",
     version="0.3.0",
-    description="Multi-agent content moderation API — Phase 3 with human review queue, appeals, and analytics",
+    description="Multi-agent content moderation API with human review queue, appeals, and analytics",
     lifespan=lifespan,
 )
 
@@ -27,6 +32,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve landing page at root
+@app.get("/", include_in_schema=False)
+async def landing():
+    return FileResponse(STATIC_DIR / "index.html")
+
+# Mount static assets (CSS, images etc. if added later)
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 app.include_router(health.router, tags=["health"])
 app.include_router(moderation.router, prefix="/api/v1", tags=["moderation"])

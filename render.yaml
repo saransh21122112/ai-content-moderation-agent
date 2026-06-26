@@ -1,10 +1,10 @@
 services:
   - type: web
-    name: sentinel-api
-    runtime: python
+    name: sentinel
+    runtime: docker
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     healthCheckPath: /health
     envVars:
       - key: OPENAI_API_KEY
@@ -36,19 +36,10 @@ services:
         sync: false
       - key: PINECONE_INDEX
         value: moderation-decisions
-
-  - type: web
-    name: sentinel-dashboard
-    runtime: node
-    plan: free
-    rootDir: dashboard
-    buildCommand: npm install && npm run build
-    startCommand: npm start
-    envVars:
-      - key: NEXT_PUBLIC_API_URL
-        value: https://ai-content-moderation-agent.onrender.com
-      - key: PORT
-        value: 3000
+      - key: DASHBOARD_PASSWORD
+        sync: false
+      - key: DASHBOARD_SECRET
+        generateValue: true
 
 databases:
   - name: sentinel-db

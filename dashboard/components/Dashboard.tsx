@@ -36,7 +36,7 @@ export default function Dashboard() {
   const [apiStatus, setApiStatus] = useState<'checking' | 'ok' | 'error'>('checking')
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/health`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'}/health`)
       .then(r => r.ok ? setApiStatus('ok') : setApiStatus('error'))
       .catch(() => setApiStatus('error'))
   }, [])
@@ -93,13 +93,27 @@ export default function Dashboard() {
               <p className="text-xs text-zinc-500 leading-none">
                 {apiStatus === 'ok' ? 'API connected' : apiStatus === 'error' ? 'API unreachable' : 'Connecting…'}
               </p>
-              <p className="text-[10px] text-zinc-700 mt-0.5 font-mono truncate">{process.env.NEXT_PUBLIC_API_URL || 'localhost:8000'}</p>
+              <p className="text-[10px] text-zinc-700 mt-0.5 font-mono truncate">{process.env.NEXT_PUBLIC_API_URL ?? 'localhost:8000'}</p>
             </div>
           </div>
           <div className="px-2.5 py-1.5 bg-[#0e0e12] rounded-lg border border-[#1c1c24]">
             <p className="text-[10px] text-zinc-700 mb-0.5">API Key</p>
             <p className="text-[10px] text-zinc-500 font-mono truncate">test-api-key-12345</p>
           </div>
+          <form action="/dashboard/login" method="get">
+            <button
+              type="submit"
+              onClick={async (e) => {
+                e.preventDefault()
+                await fetch('/api/auth/logout', { method: 'POST' }).catch(() => {})
+                window.location.href = '/dashboard/login'
+              }}
+              className="w-full mt-2 flex items-center gap-2 px-2.5 py-2 rounded-lg text-zinc-600 hover:text-zinc-400 hover:bg-[#0e0e12] transition-colors text-[11px] font-medium"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sign out
+            </button>
+          </form>
         </div>
       </aside>
 

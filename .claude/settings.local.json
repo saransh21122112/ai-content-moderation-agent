@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install *)",
+      "Bash(pip3 install *)",
+      "Bash(python3 -m pytest tests/ -v)",
+      "Bash(python3 -m pytest \"/Users/saransh/vs code/ai_content_moderation_agent/tests/\" -q)",
+      "Bash(python3 -c ' *)"
+    ]
+  }
+}

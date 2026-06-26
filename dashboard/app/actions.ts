@@ -1,7 +1,7 @@
 'use server'
 
 const API_BASE = process.env.API_URL ?? 'http://localhost:8000'
-const API_KEY = process.env.API_KEY || ''
+const API_KEY = process.env.API_KEY ?? 'test-api-key-12345'
 
 export async function apiFetch(path: string, options?: RequestInit) {
   const res = await fetch(`${API_BASE}${path}`, {

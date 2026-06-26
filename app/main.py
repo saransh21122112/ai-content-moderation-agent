@@ -1,14 +1,27 @@
+import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy import select
 from app.api.routes import analytics, appeals, health, history, jobs, moderation, review, upload
-from app.db.connection import engine
-from app.models.database import Base
+from app.db.connection import engine, AsyncSessionLocal
+from app.models.database import Base, Tenant
 
 STATIC_DIR = Path(__file__).parent.parent / "static"
+
+
+async def _seed_default_tenant():
+    api_key = os.getenv("DEFAULT_API_KEY", "test-api-key-12345")
+    async with AsyncSessionLocal() as session:
+        existing = await session.execute(select(Tenant).where(Tenant.api_key == api_key))
+        if existing.scalar_one_or_none() is None:
+            session.add(Tenant(name="Sentinel Dashboard", api_key=api_key))
+            await session.commit()
+            logging.info(f"Default tenant seeded with API key: {api_key}")
 
 
 @asynccontextmanager
@@ -16,8 +29,8 @@ async def lifespan(app: FastAPI):
     try:
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+        await _seed_default_tenant()
     except Exception as e:
-        import logging
         logging.warning(f"Database unavailable on startup — API routes requiring DB will fail: {e}")
     yield
     await engine.dispose()
@@ -42,7 +55,7 @@ app.add_middleware(
 async def landing():
     return FileResponse(STATIC_DIR / "index.html")
 
-# Mount static assets (CSS, images etc. if added later)
+# Mount static assets
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 

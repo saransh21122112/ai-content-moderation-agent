@@ -51,5 +51,5 @@ export async function signupAction(_: unknown, formData: FormData) {
     return { error: 'Cannot reach server. Please try again.' }
   }
 
-  redirect('/dashboard')
+  redirect('/')
 }

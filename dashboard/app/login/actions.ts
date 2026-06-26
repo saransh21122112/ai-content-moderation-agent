@@ -42,12 +42,12 @@ export async function loginAction(_: unknown, formData: FormData) {
     return { error: 'Cannot reach server. Please try again.' }
   }
 
-  redirect('/dashboard')
+  redirect('/')
 }
 
 export async function logoutAction() {
   const jar = await cookies()
   jar.delete('sentinel_token')
   jar.delete('sentinel_refresh')
-  redirect('/dashboard/login')
+  redirect('/login')
 }

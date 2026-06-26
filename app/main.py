@@ -13,8 +13,12 @@ STATIC_DIR = Path(__file__).parent.parent / "static"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+    except Exception as e:
+        import logging
+        logging.warning(f"Database unavailable on startup — API routes requiring DB will fail: {e}")
     yield
     await engine.dispose()
 

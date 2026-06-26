@@ -37,6 +37,19 @@ services:
       - key: PINECONE_INDEX
         value: moderation-decisions
 
+  - type: web
+    name: sentinel-dashboard
+    runtime: node
+    plan: free
+    rootDir: dashboard
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://ai-content-moderation-agent.onrender.com
+      - key: PORT
+        value: 3000
+
 databases:
   - name: sentinel-db
     plan: free

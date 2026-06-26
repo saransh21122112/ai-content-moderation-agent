@@ -36,7 +36,7 @@ export default function Dashboard() {
   const [apiStatus, setApiStatus] = useState<'checking' | 'ok' | 'error'>('checking')
 
   useEffect(() => {
-    fetch('http://localhost:8000/health')
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/health`)
       .then(r => r.ok ? setApiStatus('ok') : setApiStatus('error'))
       .catch(() => setApiStatus('error'))
   }, [])
@@ -93,7 +93,7 @@ export default function Dashboard() {
               <p className="text-xs text-zinc-500 leading-none">
                 {apiStatus === 'ok' ? 'API connected' : apiStatus === 'error' ? 'API unreachable' : 'Connecting…'}
               </p>
-              <p className="text-[10px] text-zinc-700 mt-0.5 font-mono truncate">localhost:8000</p>
+              <p className="text-[10px] text-zinc-700 mt-0.5 font-mono truncate">{process.env.NEXT_PUBLIC_API_URL || 'localhost:8000'}</p>
             </div>
           </div>
           <div className="px-2.5 py-1.5 bg-[#0e0e12] rounded-lg border border-[#1c1c24]">

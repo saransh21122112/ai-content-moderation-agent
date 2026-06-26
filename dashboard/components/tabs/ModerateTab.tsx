@@ -8,7 +8,7 @@ import {
 } from '../Icons'
 import JsonViewer from '../JsonViewer'
 
-const API_URL = 'http://localhost:8000'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 const API_KEY = 'test-api-key-12345'
 
 const SAMPLES = [

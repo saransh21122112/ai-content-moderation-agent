@@ -1,6 +1,6 @@
 'use server'
 
-const API_BASE = process.env.API_URL || 'http://localhost:8000'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 const API_KEY = process.env.API_KEY || ''
 
 export async function apiFetch(path: string, options?: RequestInit) {

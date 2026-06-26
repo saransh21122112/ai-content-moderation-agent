@@ -9,15 +9,25 @@ ENV NEXT_PUBLIC_API_URL=""
 RUN npm run build
 
 # ── Stage 2: Runtime ─────────────────────────────────────────────
-FROM python:3.11-slim
+# Pin to bookworm (Debian 12) — NodeSource supports it reliably
+FROM python:3.11-slim-bookworm
 
-# System deps: nginx, supervisor, node, gettext (for envsubst)
+ENV DEBIAN_FRONTEND=noninteractive
+
+# System deps: nginx, supervisor, node 20, gettext (for envsubst)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     supervisor \
     gettext-base \
     curl \
-    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    ca-certificates \
+    gnupg \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+       | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" \
+       | tee /etc/apt/sources.list.d/nodesource.list \
+    && apt-get update \
     && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
 

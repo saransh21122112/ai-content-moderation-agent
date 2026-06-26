@@ -6,18 +6,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from passlib.context import CryptContext
 from sqlalchemy import select
 from app.api.routes import analytics, appeals, auth, health, history, jobs, moderation, review, upload
 from app.db.connection import engine, AsyncSessionLocal
 from app.models.database import Base, Tenant, User
 
+_pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 STATIC_DIR = Path(__file__).parent.parent / "static"
 
 
 async def _seed_database():
-    from passlib.context import CryptContext
-    pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
     async with AsyncSessionLocal() as session:
         api_key = os.getenv("DEFAULT_API_KEY", "test-api-key-12345")
         tenant_row = await session.execute(select(Tenant).where(Tenant.api_key == api_key))
@@ -33,7 +33,7 @@ async def _seed_database():
             session.add(User(
                 email=admin_email,
                 username=admin_username,
-                password_hash=pwd.hash(admin_password),
+                password_hash=_pwd.hash(admin_password),
                 role="admin",
             ))
             logging.info(f"Admin user seeded: {admin_email}")
@@ -48,7 +48,7 @@ async def lifespan(app: FastAPI):
             await conn.run_sync(Base.metadata.create_all)
         await _seed_database()
     except Exception as e:
-        logging.warning(f"Database unavailable on startup: {e}")
+        logging.error(f"Startup error: {e}", exc_info=True)
     yield
     await engine.dispose()
 

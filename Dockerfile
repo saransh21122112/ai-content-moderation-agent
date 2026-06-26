@@ -48,7 +48,7 @@ COPY --from=dashboard-builder /dashboard/.next/static /dashboard/.next/static
 COPY --from=dashboard-builder /dashboard/public /dashboard/public
 
 # Nginx template + supervisor config + entrypoint
-COPY nginx.conf.template /etc/nginx/nginx.conf.template
+COPY sentinel.conf.template /etc/nginx/conf.d/sentinel.conf.template
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY start.sh /start.sh
 RUN chmod +x /start.sh

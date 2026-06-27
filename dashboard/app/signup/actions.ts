@@ -1,7 +1,6 @@
 'use server'
 
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 
 const API_BASE = process.env.API_URL ?? 'http://127.0.0.1:8000'
 
@@ -47,9 +46,8 @@ export async function signupAction(_: unknown, formData: FormData) {
       path: '/',
       sameSite: 'lax',
     })
+    return { success: true }
   } catch {
     return { error: 'Cannot reach server. Please try again.' }
   }
-
-  redirect('/')
 }

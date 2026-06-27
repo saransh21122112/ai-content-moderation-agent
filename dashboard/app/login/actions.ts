@@ -38,11 +38,11 @@ export async function loginAction(_: unknown, formData: FormData) {
       path: '/',
       sameSite: 'lax',
     })
+    // Return success — client will navigate after cookie is committed to browser
+    return { success: true }
   } catch {
     return { error: 'Cannot reach server. Please try again.' }
   }
-
-  redirect('/')
 }
 
 export async function logoutAction() {

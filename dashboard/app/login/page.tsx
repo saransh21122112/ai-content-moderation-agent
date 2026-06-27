@@ -1,11 +1,17 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 import Link from 'next/link'
 import { loginAction } from './actions'
 
 export default function LoginPage() {
   const [state, action, pending] = useActionState(loginAction, null)
+
+  useEffect(() => {
+    if (state?.success) {
+      window.location.href = '/dashboard'
+    }
+  }, [state])
 
   return (
     <div style={{

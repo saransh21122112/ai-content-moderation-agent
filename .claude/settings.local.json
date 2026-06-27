@@ -7,7 +7,14 @@
       "Bash(python3 -m pytest \"/Users/saransh/vs code/ai_content_moderation_agent/tests/\" -q)",
       "Bash(python3 -c ' *)",
       "Bash(git commit -m 'Docker deploy: single container with Nginx, FastAPI, Next.js + login gate *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(curl -s http://localhost:8000/api/v1/auth/login -X POST -H \"Content-Type: application/json\" -d '{\"email\":\"admin@sentinel.ai\",\"password\":\"Admin@Sentinel123\"}')",
+      "Bash(curl -s http://localhost:8000/health)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(npx playwright *)",
+      "Bash(pg_isready)",
+      "Bash(psql -U moderation_user -d moderation_db -c \"SELECT 1\")"
     ]
   }
 }
